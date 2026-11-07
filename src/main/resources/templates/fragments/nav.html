@@ -1,0 +1,19 @@
+<header class="site-header" th:fragment="nav">
+    <div class="nav-inner">
+        <a class="brand" th:href="@{/}">Kforum<span>.</span></a>
+        <nav class="main-nav" aria-label="Основная навигация">
+            <a th:href="@{/}">Главная</a>
+            <a th:href="@{/categories}">Категории</a>
+            <a th:href="@{/topics/new}" th:if="${isAuthenticated}">Создать тему</a>
+            <a th:href="@{/admin}" th:if="${isAdmin}">Админ-панель</a>
+        </nav>
+        <div class="nav-actions">
+            <span class="user-chip" th:if="${isAuthenticated}" th:text="${currentUserEmail}">user@example.com</span>
+            <a class="button button-quiet" th:href="@{/login}" th:if="${!isAuthenticated}">Войти</a>
+            <a class="button button-primary" th:href="@{/register}" th:if="${!isAuthenticated}">Регистрация</a>
+            <form th:if="${isAuthenticated}" th:action="@{/logout}" method="post" class="inline-form">
+                <button class="button button-quiet" type="submit">Выйти</button>
+            </form>
+        </div>
+    </div>
+</header>

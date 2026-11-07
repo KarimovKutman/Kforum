@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Админ-панель — Kforum</title><link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<div th:replace="~{fragments/nav :: nav}"></div>
+<main class="container page-content">
+    <div th:replace="~{fragments/alerts :: alerts}"></div>
+    <section class="page-heading"><p class="eyebrow">УПРАВЛЕНИЕ СООБЩЕСТВОМ</p><h1>Админ-панель</h1><p>Создавай категории и управляй структурой форума.</p></section>
+    <div class="admin-grid">
+        <section class="form-panel"><h2>Новая категория</h2><p class="muted">Категории помогают участникам находить нужные обсуждения.</p>
+            <form th:action="@{/admin/categories}" th:object="${categoryForm}" method="post">
+                <div class="form-field"><label for="name">Название</label><input id="name" th:field="*{name}" maxlength="100" placeholder="Например, Backend" required><small class="field-error" th:errors="*{name}"></small></div>
+                <div class="form-field"><label for="description">Описание</label><textarea id="description" th:field="*{description}" maxlength="500" rows="4" placeholder="О чём эта категория?"></textarea><small class="field-error" th:errors="*{description}"></small></div>
+                <button class="button button-primary" type="submit">Создать категорию</button>
+            </form>
+        </section>
+        <section class="admin-list-panel"><h2>Категории <span class="count-pill" th:text="${#lists.size(categories)}">0</span></h2>
+            <div class="admin-category-row" th:each="category : ${categories}"><div><strong th:text="${category.name}">Backend</strong><p th:text="${category.description != null ? category.description : 'Без описания'}">Описание</p></div><form th:action="@{/admin/categories/{id}/delete(id=${category.id})}" method="post" onsubmit="return confirm('Удалить категорию? Связанные темы также могут быть удалены.');"><button type="submit" class="button button-danger button-small">Удалить</button></form></div>
+            <div class="empty-state" th:if="${#lists.isEmpty(categories)}"><p>Категорий пока нет.</p></div>
+        </section>
+    </div>
+    <p class="admin-warning">Внимание: удаление категории может удалить связанные темы и комментарии в зависимости от ограничений базы данных.</p>
+</main>
+<footer class="site-footer"><div class="container footer-inner"><a class="brand" th:href="@{/}">Kforum<span>.</span></a><p>Панель управления сообществом.</p><span>© Kforum</span></div></footer>
+    <script th:src="@{/js/app.js}" defer></script>
+</body>
+</html>

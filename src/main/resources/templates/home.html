@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Kforum — форум сообщества</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<div th:replace="~{fragments/nav :: nav}"></div>
+<main class="container">
+    <div th:replace="~{fragments/alerts :: alerts}"></div>
+    <section class="hero">
+        <div class="hero-copy">
+            <p class="eyebrow">СООБЩЕСТВО · ИДЕИ · ОБСУЖДЕНИЯ</p>
+            <h1>Хорошие вопросы<br><span>начинают разговор.</span></h1>
+            <p class="hero-description">Обсуждай технологии, делись опытом и находи ответы вместе с сообществом Kforum.</p>
+            <div class="hero-actions">
+                <a class="button button-primary button-large" th:href="@{/topics/new}" th:if="${isAuthenticated}">Создать тему <span aria-hidden="true">↗</span></a>
+                <a class="button button-primary button-large" th:href="@{/register}" th:if="${!isAuthenticated}">Присоединиться <span aria-hidden="true">↗</span></a>
+                <a class="button button-secondary button-large" th:href="@{/categories}">Смотреть категории</a>
+            </div>
+            <form class="search-form" th:action="@{/search}" method="get">
+                <span class="search-icon" aria-hidden="true">⌕</span>
+                <input type="search" name="query" placeholder="Найти тему или вопрос…" aria-label="Поиск тем">
+                <button type="submit" class="button button-dark">Поиск</button>
+            </form>
+        </div>
+        <aside class="hero-note">
+            <div class="note-mark">K.</div>
+            <p class="note-label">МЕСТО ДЛЯ ТВОИХ ИДЕЙ</p>
+            <p class="note-title">Спроси.<br>Обсуди.<br><span>Разберись.</span></p>
+            <div class="note-line"></div>
+            <p class="note-small">Каждая тема — начало чего-то полезного.</p>
+        </aside>
+    </section>
+
+    <section class="section-block">
+        <div class="section-heading">
+            <div><p class="eyebrow">НАВИГАЦИЯ</p><h2>Категории</h2></div>
+            <a class="text-link" th:href="@{/categories}">Все категории <span aria-hidden="true">→</span></a>
+        </div>
+        <div class="category-grid" th:if="${!#lists.isEmpty(categories)}">
+            <a class="category-card" th:each="category : ${categories}" th:href="@{/categories/{id}(id=${category.id})}">
+                <span class="category-symbol">#</span>
+                <h3 th:text="${category.name}">Категория</h3>
+                <p th:text="${category.description != null and !category.description.isBlank() ? category.description : 'Обсуждения и вопросы сообщества'}">Описание категории</p>
+                <span class="card-arrow" aria-hidden="true">↗</span>
+            </a>
+        </div>
+        <div class="empty-state" th:if="${#lists.isEmpty(categories)}">
+            <h3>Категории пока не созданы</h3>
+            <p>Когда администратор добавит категории, они появятся здесь.</p>
+        </div>
+    </section>
+
+    <section class="section-block">
+        <div class="section-heading">
+            <div><p class="eyebrow">СВЕЖИЕ ОБСУЖДЕНИЯ</p><h2>Новые темы</h2></div>
+        </div>
+        <div class="topic-list" th:if="${!topics.empty}">
+            <a class="topic-row" th:each="topic : ${topics.content}" th:href="@{/topics/{id}(id=${topic.id})}">
+                <div class="topic-avatar" th:text="${#strings.substring(topic.author.username, 0, 1).toUpperCase()}">K</div>
+                <div class="topic-row-main">
+                    <div class="topic-meta"><span class="tag" th:text="${topic.category.name}">Категория</span><span th:text="${topic.createdAt}">Дата</span></div>
+                    <h3 th:text="${topic.title}">Название темы</h3>
+                    <p class="topic-preview" th:text="${#strings.abbreviate(topic.content, 150)}">Текст темы</p>
+                    <span class="topic-author" th:text="${'@' + topic.author.username}">@author</span>
+                </div>
+                <div class="topic-stats"><span>◉ <span th:text="${topic.views}">0</span></span><span class="row-arrow" aria-hidden="true">↗</span></div>
+            </a>
+        </div>
+        <div class="empty-state" th:if="${topics.empty}">
+            <h3>Первая тема ещё впереди</h3>
+            <p>Начни обсуждение — оно появится в этой ленте.</p>
+            <a class="button button-primary" th:href="@{/topics/new}" th:if="${isAuthenticated}">Создать тему</a>
+        </div>
+    </section>
+</main>
+<footer class="site-footer"><div class="container footer-inner"><a class="brand" th:href="@{/}">Kforum<span>.</span></a><p>Сообщество, в котором можно задавать вопросы.</p><span>© Kforum</span></div></footer>
+    <script th:src="@{/js/app.js}" defer></script>
+</body>
+</html>

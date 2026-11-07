@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${topic.title + ' — Kforum'}">Тема — Kforum</title><link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<div th:replace="~{fragments/nav :: nav}"></div>
+<main class="container page-content narrow-content">
+    <div th:replace="~{fragments/alerts :: alerts}"></div>
+    <a class="back-link" th:href="@{/categories/{id}(id=${topic.category.id})}" th:text="${'← ' + topic.category.name}">← Категория</a>
+    <article class="topic-article">
+        <div class="topic-meta"><span class="tag" th:text="${topic.category.name}">Категория</span><span th:text="${topic.createdAt}">Дата</span><span>◉ <span th:text="${topic.views}">0</span> просмотров</span></div>
+        <h1 th:text="${topic.title}">Заголовок темы</h1>
+        <div class="author-line"><div class="topic-avatar" th:text="${#strings.substring(topic.author.username, 0, 1).toUpperCase()}">K</div><div><strong th:text="${'@' + topic.author.username}">@author</strong><span>Автор обсуждения</span></div></div>
+        <div class="topic-body" th:text="${topic.content}">Содержимое темы.</div>
+    </article>
+
+    <section class="comments-section">
+        <div class="section-heading"><div><p class="eyebrow">ОБМЕН МНЕНИЯМИ</p><h2>Комментарии <span class="count-pill" th:text="${#lists.size(comments)}">0</span></h2></div></div>
+        <div class="comment-list" th:if="${!#lists.isEmpty(comments)}">
+            <article class="comment-card" th:each="comment : ${comments}">
+                <div class="comment-top"><strong th:text="${'@' + comment.author.username}">@user</strong><span th:text="${comment.createdAt}">Дата</span></div>
+                <p th:text="${comment.content}">Текст комментария</p>
+            </article>
+        </div>
+        <div class="empty-state small-empty" th:if="${#lists.isEmpty(comments)}"><p>Пока никто не прокомментировал эту тему. Будь первым.</p></div>
+        <form class="form-panel comment-form" th:if="${isAuthenticated}" th:action="@{/topics/{id}/comments(id=${topic.id})}" method="post">
+            <label for="content">Твой комментарий</label>
+            <textarea id="content" name="content" rows="4" maxlength="5000" placeholder="Напиши ответ…" required></textarea>
+            <div class="form-footer"><span class="field-hint">Пиши уважительно и по теме.</span><button class="button button-primary" type="submit">Отправить комментарий</button></div>
+        </form>
+        <div class="login-prompt" th:if="${!isAuthenticated}"><p>Войди в аккаунт, чтобы участвовать в обсуждении.</p><a class="button button-primary" th:href="@{/login}">Войти</a></div>
+    </section>
+</main>
+<footer class="site-footer"><div class="container footer-inner"><a class="brand" th:href="@{/}">Kforum<span>.</span></a><p>Обсуждай то, что важно.</p><span>© Kforum</span></div></footer>
+    <script th:src="@{/js/app.js}" defer></script>
+</body>
+</html>

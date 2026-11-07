@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Поиск — Kforum</title><link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<div th:replace="~{fragments/nav :: nav}"></div>
+<main class="container page-content">
+    <div th:replace="~{fragments/alerts :: alerts}"></div>
+    <section class="page-heading"><p class="eyebrow">ПОИСК ПО ФОРУМУ</p><h1>Результаты поиска</h1><p th:text="${'Запрос: ' + (query.isBlank() ? 'все темы' : query)}">Запрос</p></section>
+    <form class="search-form search-form-page" th:action="@{/search}" method="get"><span class="search-icon" aria-hidden="true">⌕</span><input type="search" name="query" th:value="${query}" placeholder="Найти тему или вопрос…" aria-label="Поиск тем"><button type="submit" class="button button-dark">Поиск</button></form>
+    <div class="topic-list" th:if="${!topics.empty}"><a class="topic-row" th:each="topic : ${topics.content}" th:href="@{/topics/{id}(id=${topic.id})}"><div class="topic-avatar" th:text="${#strings.substring(topic.author.username, 0, 1).toUpperCase()}">K</div><div class="topic-row-main"><div class="topic-meta"><span class="tag" th:text="${topic.category.name}">Категория</span><span th:text="${topic.createdAt}">Дата</span></div><h3 th:text="${topic.title}">Тема</h3><p class="topic-preview" th:text="${#strings.abbreviate(topic.content, 150)}">Содержание</p><span class="topic-author" th:text="${'@' + topic.author.username}">@author</span></div><div class="topic-stats"><span>◉ <span th:text="${topic.views}">0</span></span><span class="row-arrow" aria-hidden="true">↗</span></div></a></div>
+    <div class="empty-state" th:if="${topics.empty}"><h3>Ничего не найдено</h3><p>Попробуй изменить поисковый запрос.</p></div>
+</main>
+<footer class="site-footer"><div class="container footer-inner"><a class="brand" th:href="@{/}">Kforum<span>.</span></a><p>Обсуждай то, что важно.</p><span>© Kforum</span></div></footer>
+    <script th:src="@{/js/app.js}" defer></script>
+</body>
+</html>

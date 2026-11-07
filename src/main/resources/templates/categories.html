@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Категории — Kforum</title><link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<div th:replace="~{fragments/nav :: nav}"></div>
+<main class="container page-content">
+    <div th:replace="~{fragments/alerts :: alerts}"></div>
+    <section class="page-heading"><p class="eyebrow">ОРГАНИЗУЙ СВОИ ИДЕИ</p><h1>Категории</h1><p>Выбери направление и присоединяйся к обсуждению.</p></section>
+    <div class="category-grid category-grid-large" th:if="${!#lists.isEmpty(categories)}">
+        <a class="category-card" th:each="category : ${categories}" th:href="@{/categories/{id}(id=${category.id})}">
+            <span class="category-symbol">#</span><h3 th:text="${category.name}">Категория</h3>
+            <p th:text="${category.description != null and !category.description.isBlank() ? category.description : 'Обсуждения и вопросы сообщества'}">Описание</p>
+            <span class="card-arrow" aria-hidden="true">↗</span>
+        </a>
+    </div>
+    <div class="empty-state" th:if="${#lists.isEmpty(categories)}"><h3>Здесь пока пусто</h3><p>Категории появятся после того, как администратор их создаст.</p></div>
+</main>
+<footer class="site-footer"><div class="container footer-inner"><a class="brand" th:href="@{/}">Kforum<span>.</span></a><p>Обсуждай то, что важно.</p><span>© Kforum</span></div></footer>
+    <script th:src="@{/js/app.js}" defer></script>
+</body>
+</html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Регистрация — Kforum</title><link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body class="auth-page">
+<div th:replace="~{fragments/nav :: nav}"></div>
+<main class="container auth-container register-container">
+    <div class="auth-visual"><div class="note-mark">K.</div><p class="eyebrow">ТВОЁ МЕСТО В СООБЩЕСТВЕ</p><h1>Есть что<br><span>обсудить?</span></h1><p>Создай аккаунт, публикуй темы, задавай вопросы и помогай другим.</p><div class="auth-visual-bottom">Участие начинается с одного вопроса.</div></div>
+    <section class="auth-card">
+        <div th:replace="~{fragments/alerts :: alerts}"></div>
+        <div class="alert alert-error" th:if="${registrationError != null}" th:text="${registrationError}"></div>
+        <p class="eyebrow">НОВЫЙ АККАУНТ</p><h2>Регистрация</h2><p class="muted">Заполни данные, чтобы присоединиться.</p>
+        <form th:action="@{/register}" th:object="${registrationForm}" method="post" class="auth-form">
+            <div class="form-field"><label for="username">Имя пользователя</label><input id="username" th:field="*{username}" type="text" minlength="4" maxlength="16" autocomplete="username" placeholder="kutman_dev" required><small class="field-error" th:errors="*{username}"></small></div>
+            <div class="form-grid-two">
+                <div class="form-field"><label for="name">Имя</label><input id="name" th:field="*{name}" type="text" maxlength="100" autocomplete="given-name" required><small class="field-error" th:errors="*{name}"></small></div>
+                <div class="form-field"><label for="surname">Фамилия</label><input id="surname" th:field="*{surname}" type="text" maxlength="100" autocomplete="family-name" required><small class="field-error" th:errors="*{surname}"></small></div>
+            </div>
+            <div class="form-field"><label for="email">Email</label><input id="email" th:field="*{email}" type="email" autocomplete="email" placeholder="you@example.com" required><small class="field-error" th:errors="*{email}"></small></div>
+            <div class="form-field"><label for="password">Пароль</label><input id="password" th:field="*{password}" type="password" minlength="16" maxlength="64" autocomplete="new-password" required><small class="field-hint">Не менее 16 символов, минимум одна заглавная буква и одна цифра.</small><small class="field-error" th:errors="*{password}"></small></div>
+            <div class="form-field"><label for="confirmPassword">Повтори пароль</label><input id="confirmPassword" name="confirmPassword" type="password" minlength="16" maxlength="64" autocomplete="new-password" required></div>
+            <button class="button button-primary button-full" type="submit">Создать аккаунт ↗</button>
+        </form>
+        <p class="auth-switch">Уже зарегистрирован? <a th:href="@{/login}">Войти</a></p>
+    </section>
+</main>
+    <script th:src="@{/js/app.js}" defer></script>
+</body>
+</html>

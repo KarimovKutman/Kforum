@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${category.name + ' — Kforum'}">Категория — Kforum</title><link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<div th:replace="~{fragments/nav :: nav}"></div>
+<main class="container page-content">
+    <div th:replace="~{fragments/alerts :: alerts}"></div>
+    <a class="back-link" th:href="@{/categories}">← Все категории</a>
+    <section class="page-heading"><p class="eyebrow">КАТЕГОРИЯ</p><h1 th:text="${category.name}">Название</h1><p th:text="${category.description != null ? category.description : 'Обсуждения в этой категории.'}">Описание категории</p></section>
+    <div class="section-heading compact-heading"><h2>Темы</h2><a class="button button-primary" th:href="@{/topics/new}" th:if="${isAuthenticated}">Создать тему</a></div>
+    <div class="topic-list" th:if="${!#lists.isEmpty(topics)}">
+        <a class="topic-row" th:each="topic : ${topics}" th:href="@{/topics/{id}(id=${topic.id})}">
+            <div class="topic-avatar" th:text="${#strings.substring(topic.author.username, 0, 1).toUpperCase()}">K</div>
+            <div class="topic-row-main"><div class="topic-meta"><span class="tag" th:text="${topic.category.name}">Категория</span><span th:text="${topic.createdAt}">Дата</span></div><h3 th:text="${topic.title}">Тема</h3><p class="topic-preview" th:text="${#strings.abbreviate(topic.content, 150)}">Содержание</p><span class="topic-author" th:text="${'@' + topic.author.username}">@author</span></div>
+            <div class="topic-stats"><span>◉ <span th:text="${topic.views}">0</span></span><span class="row-arrow" aria-hidden="true">↗</span></div>
+        </a>
+    </div>
+    <div class="empty-state" th:if="${#lists.isEmpty(topics)}"><h3>В этой категории ещё нет тем</h3><p>Создай первую тему и начни обсуждение.</p><a class="button button-primary" th:href="@{/topics/new}" th:if="${isAuthenticated}">Создать тему</a><a class="button button-primary" th:href="@{/login}" th:if="${!isAuthenticated}">Войти, чтобы создать тему</a></div>
+</main>
+<footer class="site-footer"><div class="container footer-inner"><a class="brand" th:href="@{/}">Kforum<span>.</span></a><p>Обсуждай то, что важно.</p><span>© Kforum</span></div></footer>
+    <script th:src="@{/js/app.js}" defer></script>
+</body>
+</html>
